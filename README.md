@@ -20,19 +20,25 @@ Requirements:
 
 **Example Usage 1**
 
-      $sql = "SELECT * FROM a";
+      $sql = "SELECT * FROM a"; # Extract all attribute and text from tag a
       $content = file_get_contents('http://www.google.com/');
       $result = html_query($content,$sql);
       
 **Example Usage 2**
 
-      $sql = "SELECT src FROM img WHERE src = '/'";
+      $sql = "SELECT src FROM img WHERE src != '/'"; # Extract src attribute values from img tag where src not equal to '/'
       $content = file_get_contents('http://www.google.com/');
       $result = html_query($content,$sql);
     
 **Example Usage 3**
 
-      $sql = "SELECT name,content FROM meta WHERE name LIKE '^description$'";
+      $sql = "SELECT name,content FROM meta WHERE name LIKE '^description$'"; # Extract name and content attribute values from meta tag where name like description
+      $content = file_get_contents('http://www.google.com/');
+      $result = html_query($content,$sql);
+      
+**Example Usage 4**
+
+      $sql = "SELECT html2txt FROM *"; # Convert html to text
       $content = file_get_contents('http://www.google.com/');
       $result = html_query($content,$sql);
 
