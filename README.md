@@ -21,16 +21,19 @@ Requirements:
 **Example Usage 1**
 
       $sql = "SELECT * FROM a";
+      $content = file_get_contents('http://www.google.com/');
       $result = html_query($content,$sql);
       
 **Example Usage 2**
 
       $sql = "SELECT src FROM img WHERE src = '/'";
+      $content = file_get_contents('http://www.google.com/');
       $result = html_query($content,$sql);
     
 **Example Usage 3**
 
       $sql = "SELECT name,content FROM meta WHERE name LIKE '^description$'";
+      $content = file_get_contents('http://www.google.com/');
       $result = html_query($content,$sql);
 
 
