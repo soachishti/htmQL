@@ -4,8 +4,7 @@ htmQL (HTML parser using SQL)
 htmQL PHP library with the help of which
 you to parse HTML by using SQL syntax.
 
-Requirements
-------------
+Requirements:
 * PHP > 5
 
 **htmQL query look like**
