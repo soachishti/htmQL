@@ -197,7 +197,7 @@ function compare($k1,$k2,$operator)
 	switch($operator)
 	{
 		case 'LIKE':
-			return (preg_match("#".addslashes($k2)."#",$k1)) ? true : false;
+			return (preg_match("#".addslashes($k2)."#is",$k1)) ? true : false;
 		break;
 		case '=':
 			return ($k1 == $k2) ? true : false ;
