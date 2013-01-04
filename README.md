@@ -19,28 +19,38 @@ Requirements:
                                   "*" = all tags
 
 **Example Usage 1**
-
-      $sql = "SELECT * FROM a"; # Extract all attribute and text from tag a
+Extract all attribute and text from tag a
+      $sql = "SELECT * FROM a";
       $content = file_get_contents('http://www.google.com/');
       $result = html_query($content,$sql);
       
 **Example Usage 2**
-
-      $sql = "SELECT src FROM img WHERE src != '/'"; # Extract src attribute values from img tag where src not equal to '/'
+Extract src attribute values from img tag where src not equal to '/'
+      $sql = "SELECT src FROM img WHERE src != '/'";
       $content = file_get_contents('http://www.google.com/');
       $result = html_query($content,$sql);
     
 **Example Usage 3**
-
-      $sql = "SELECT name,content FROM meta WHERE name LIKE '^description$'"; # Extract name and content attribute values from meta tag where name like description
+Extract name and content attribute values from meta tag where name like description
+      $sql = "SELECT name,content FROM meta WHERE name LIKE '^description$'";
       $content = file_get_contents('http://www.google.com/');
       $result = html_query($content,$sql);
       
 **Example Usage 4**
-
-      $sql = "SELECT html2txt FROM *"; # Convert html to text
+Convert html to text
+      $sql = "SELECT html2txt FROM *";
       $content = file_get_contents('http://www.google.com/');
       $result = html_query($content,$sql);
+      
+**Example Usage 5**
+Convert relative urls in href and src attribute to absolute urls
+      $url = "'http://www.google.com/'";
+      $rel2abs = true;
+      $base_url = $url;
+      $url_attib = Array('href','src');
+      $sql = "SELECT href,src FROM img,a";
+      $content = file_get_contents($url);
+      $result = html_query($content,$sql);      
 
 
-Original idea is from [Jonas John](http://www.jonasjohn.de/old-projects.htm)
+Original idea is by [Jonas John](http://www.jonasjohn.de/old-projects.htm)
