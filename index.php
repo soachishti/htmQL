@@ -1,5 +1,5 @@
 <?php
-include('htmql.php');
+require('htmql.php'); # Including functions file
 
 $content = file_get_contents('http://www.google.com/'); # Fetching HTML from Url
 
@@ -9,7 +9,7 @@ $url_attrib = Array('href','src'); # Key of Attribute which contains URL
 
 $sql = "SELECT * FROM a";  # Querying HTML
 
-$result = html_query($content,$sql);
+$result = htmql_query($content,$sql);
 
 echo '<pre>';
 	print_r($result); # Output Result
