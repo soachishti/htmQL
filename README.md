@@ -10,11 +10,12 @@ Requirements:
 
 Features:
 ------------
+* Better recognition of Tags
+* Supports invalid HTML.
 * Support SELECT and WHERE clause.
 * Convert HTML to Text
 * Convert Relatvie Urls to Absolute Urls
 * No use of eval function as compare to [htmlSQL](https://github.com/hxseven/htmlSQL).
-* 
 
 **htmQL query look like**
 
