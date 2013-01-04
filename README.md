@@ -8,6 +8,14 @@ Requirements:
 ------------
 * PHP > 5
 
+Features:
+------------
+* Support SELECT and WHERE clause.
+* Convert HTML to Text
+* Convert Relatvie Urls to Absolute Urls
+* No use of eval function as compare to [htmlSQL](https://github.com/hxseven/htmlSQL).
+* 
+
 **htmQL query look like**
 
     SELECT text,href,title FROM a WHERE class = "link" AND id LIKE '/'
@@ -19,6 +27,7 @@ Requirements:
                                   "*" = all tags
 
 **Example Usage 1**
+
 Extract all attribute and text from tag a
 
       $sql = "SELECT * FROM a";
@@ -26,6 +35,7 @@ Extract all attribute and text from tag a
       $result = html_query($content,$sql);
       
 **Example Usage 2**
+
 Extract src attribute values from img tag where src not equal to '/'
 
       $sql = "SELECT src FROM img WHERE src != '/'";
@@ -33,6 +43,7 @@ Extract src attribute values from img tag where src not equal to '/'
       $result = html_query($content,$sql);
     
 **Example Usage 3**
+
 Extract name and content attribute values from meta tag where name like description
 
       $sql = "SELECT name,content FROM meta WHERE name LIKE '^description$'";
@@ -40,6 +51,7 @@ Extract name and content attribute values from meta tag where name like descript
       $result = html_query($content,$sql);
       
 **Example Usage 4**
+
 Convert html to text
 
       $sql = "SELECT html2txt FROM *";
@@ -47,6 +59,7 @@ Convert html to text
       $result = html_query($content,$sql);
       
 **Example Usage 5**
+
 Convert relative urls in href and src attribute to absolute urls
 
       $url = "'http://www.google.com/'";
