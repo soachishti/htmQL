@@ -11,7 +11,7 @@ Requirements:
 Features:
 ------------
 * Better recognition of Tags
-* Extract html content using SQL
+* Extract html tags using SQL
 * Support SELECT and WHERE clause.
 * Convert HTML to Text
 * Convert Relatvie Urls to Absolute Urls
