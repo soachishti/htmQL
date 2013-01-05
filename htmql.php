@@ -42,7 +42,6 @@ function htmql_query($content,$sql)
 		
 	if(isset($select['html2text']))
 	{
-		echo 1;
 		$data['html2txt'] = html2txt($content);
 	}
 	else
@@ -110,7 +109,6 @@ function tag_extract($tag,$content,$select)
 	
 	for($i=0;$i<=count($out[0])-1;$i++)
 	{
-		echo '1';
 		if(isset($select['text']) || isset($select['*']))
 		{
 			$tags[$tag][$i]['text'] = htmlspecialchars(trim($out[3][$i]));
