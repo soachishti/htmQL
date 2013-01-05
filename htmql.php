@@ -32,7 +32,7 @@ error_reporting(E_ALL ^ E_NOTICE); # Report all Errors
 	Output:		Tags content such as text and its attributes if exits
 \*======================================================================*/
 
-function html_query($content,$sql)
+function htmql_query($content,$sql)
 {
 	preg_match("#^SELECT\s*(.*?)\s*FROM\s*(.*?)\s*(|WHERE\s*(.*?)\s*)$#",$sql,$out); #
 
