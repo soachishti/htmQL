@@ -1,6 +1,6 @@
 htmSQL (HTML parser using SQL)
 Created January 2, 2013
-Version 1
+Version 1.0
 
 (c) 2013 soacWAY (soacway@gmail.com).
 
