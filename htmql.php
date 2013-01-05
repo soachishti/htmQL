@@ -2,7 +2,7 @@
 /*
  * htmSQL (HTML parser using SQL)
  * Created January 2, 2013
- * Version 1
+ * Version 1.0
  * 
  * (c) 2013 soacWAY (soacway@gmail.com).
  * 
@@ -51,20 +51,18 @@ function htmql_query($content,$sql)
 			preg_match_all("/<([a-z0-9\-]+)\s+?/is", $content, $out);
 			$tags = array_flip(array_unique($out[1])); 
 		} 
-
+		
 		$data = Array();
 		foreach($tags as $key => $value)
 		{
 			$extracted_tags = tag_extract($key,$content,$select);
 			$data = array_merge($extracted_tags,$data);
 		}
-
-
 	
 		if($where != null)
 		{
 			preg_match_all("#(|OR|AND)\s*([a-z0-9\-]+)\s*(LIKE|\!=|=|<|>)+\s*[\"\'](.*?)[\"\']\s*(|OR|AND)*#is",$where,$out);
-		
+
 			$count = count($out[2])-1;
 			$keys = $out[2];
 			$condition = $out[1];
@@ -77,7 +75,7 @@ function htmql_query($content,$sql)
 				{
 					for($i=0;$i<=count($v3['attribute'])-1;$i++)
 					{
-						$datas = $data[$k1][$k2]['attribute'][$i];	
+						$datas = $data[$k1][$k2]['attribute'];	
 						if(found($datas,$keys,$values,$condition,$count,$comparison) != 1)
 						{
 							unset($data[$k1][$k2]);
@@ -121,15 +119,15 @@ function tag_extract($tag,$content,$select)
 			{
 				if($rel2abs == true && isset($base_url) && in_array($out1[1][$key], $url_attrib)) 
 				{
-					$tags[$tag][$i]['attribute'][$key][$out1[1][$key]] = rel2abs($base_url,$out1[2][$key]);
+					$tags[$tag][$i]['attribute'][$out1[1][$key]] = rel2abs($base_url,$out1[2][$key]);
 				}
 				else
 				{
-					$tags[$tag][$i]['attribute'][$key][$out1[1][$key]] = $out1[2][$key];
+					$tags[$tag][$i]['attribute'][$out1[1][$key]] = $out1[2][$key];
 				}
 			}
 		}
-	}	
+	}		
 	return $tags;
 }
 
