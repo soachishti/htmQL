@@ -37,9 +37,20 @@ you to parse HTML by using SQL syntax.</p>
 
 <ul>
 <li>PHP &gt; 5</li>
+</ul>
+<h2>Features:</h2>
+
+<ul>
+<li>Better recognition of Tags.</li>
+<li>Extract html tags using SQL syntax.</li>
+<li>Support SELECT and WHERE clause.</li>
+<li>Convert HTML to Text.</li>
+<li>Convert Relatvie Urls to Absolute Urls.</li>
+<li>No use of eval function as compare to <a href="https://github.com/hxseven/htmlSQL">htmlSQL</a>.
+  </li>
 </ul><p><strong>htmQL query look like</strong></p>
 
-<pre><code>SELECT text,href,title FROM a WHERE class = "link" AND id LIKE '/'
+<pre><code>SELECT text,href,title FROM a WHERE class = "link" AND id LIKE '^/$'
        ^ Attributes or      ^       ^ attribute value           ^ 
          "*" = all Attribs  ^         must be                   ^ Regex Expression eg "^html$"
          to return          ^
@@ -50,33 +61,54 @@ you to parse HTML by using SQL syntax.</p>
 
 <p><strong>Example Usage 1</strong></p>
 
-<pre><code>  $sql = "SELECT * FROM a"; # Extract all attribute and text from tag a
+<p>Extract all attribute and text from tag a</p>
+
+<pre><code>  $sql = "SELECT * FROM a";
   $content = file_get_contents('http://www.google.com/');
   $result = html_query($content,$sql);
 </code></pre>
 
 <p><strong>Example Usage 2</strong></p>
 
-<pre><code>  $sql = "SELECT src FROM img WHERE src != '/'"; # Extract src attribute values from img tag where src not equal to '/'
+<p>Extract src attribute values from img tag where src not equal to '/'</p>
+
+<pre><code>  $sql = "SELECT src FROM img WHERE src != '/'";
   $content = file_get_contents('http://www.google.com/');
   $result = html_query($content,$sql);
 </code></pre>
 
 <p><strong>Example Usage 3</strong></p>
 
-<pre><code>  $sql = "SELECT name,content FROM meta WHERE name LIKE '^description$'"; # Extract name and content attribute values from meta tag where name like description
+<p>Extract name and content attribute values from meta tag where name like description</p>
+
+<pre><code>  $sql = "SELECT name,content FROM meta WHERE name LIKE '^description$'";
   $content = file_get_contents('http://www.google.com/');
   $result = html_query($content,$sql);
 </code></pre>
 
 <p><strong>Example Usage 4</strong></p>
 
-<pre><code>  $sql = "SELECT html2txt FROM *"; # Convert html to text
+<p>Convert html to text</p>
+
+<pre><code>  $sql = "SELECT html2txt FROM *";
   $content = file_get_contents('http://www.google.com/');
   $result = html_query($content,$sql);
 </code></pre>
 
-<p>Original idea is from <a href="http://www.jonasjohn.de/old-projects.htm">Jonas John</a></p>
+<p><strong>Example Usage 5</strong></p>
+
+<p>Convert relative urls in href and src attribute to absolute urls</p>
+
+<pre><code>  $url = "http://www.google.com/";
+  $rel2abs = true;
+  $base_url = $url;
+  $url_attib = Array('href','src');
+  $sql = "SELECT href,src FROM img,a";
+  $content = file_get_contents($url);
+  $result = html_query($content,$sql);      
+</code></pre>
+
+<p>Original idea is by <a href="http://www.jonasjohn.de/old-projects.htm">Jonas John</a></p>
   
 </section>
 
