@@ -10,16 +10,16 @@ Requirements:
 
 Features:
 ------------
-* Better recognition of Tags
-* Extract html tags using SQL
+* Better recognition of Tags.
+* Extract html tags using SQL syntax.
 * Support SELECT and WHERE clause.
-* Convert HTML to Text
-* Convert Relatvie Urls to Absolute Urls
+* Convert HTML to Text.
+* Convert Relatvie Urls to Absolute Urls.
 * No use of eval function as compare to [htmlSQL](https://github.com/hxseven/htmlSQL).
 
 **htmQL query look like**
 
-    SELECT text,href,title FROM a WHERE class = "link" AND id LIKE '/'
+    SELECT text,href,title FROM a WHERE class = "link" AND id LIKE '^/$'
            ^ Attributes or      ^       ^ attribute value           ^ 
              "*" = all Attribs  ^         must be                   ^ Regex Expression eg "^html$"
              to return          ^
@@ -63,7 +63,7 @@ Convert html to text
 
 Convert relative urls in href and src attribute to absolute urls
 
-      $url = "'http://www.google.com/'";
+      $url = "http://www.google.com/";
       $rel2abs = true;
       $base_url = $url;
       $url_attib = Array('href','src');
