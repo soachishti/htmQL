@@ -4,32 +4,39 @@
  * Created January 2, 2013
  * Version 1.0
  * 
- * (c) 2013 soacWAY (soacway@gmail.com).
+ * Copyright (c) 2013, soacWAY (soacway@gmail.com).
+ * All rights reserved.
  * 
- * htmSQL  is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
  * 
- * htmSQL  is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License
- * along with htmSQL .  If not, see <http://www.gnu.org/licenses/>.
- * 
- */
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
 ini_set('display_errors', 'on'); # Report all Errors
 error_reporting(E_ALL ^ E_NOTICE); # Report all Errors
 //error_reporting(0); # No Error Reporting
 
 /*======================================================================*\
-	Function:	tag_extract
-	Purpose:	fetch the contents of tags such as text and its attributes 
-	Input:		Tags, Fetched HTML (content) and Attributes to Select(select)
-	Output:		Tags content such as text and its attributes if exits
+	Function:	htmql_query
+	Purpose:	Parse SQL syntax and output result
+	Input:		HTML content, SQL query
+	Output:		Tag Data
 \*======================================================================*/
 
 function htmql_query($content,$sql)
@@ -73,9 +80,9 @@ function htmql_query($content,$sql)
 			{
 				foreach($v1 as $k2 => $v3)
 				{
-					for($i=0;$i<=count($v3['attribute'])-1;$i++)
+					for($i=0;$i<=count($v3)-1;$i++)
 					{
-						$datas = $data[$k1][$k2]['attribute'];	
+						$datas = $data[$k1][$k2];	
 						if(found($datas,$keys,$values,$condition,$count,$comparison) != 1)
 						{
 							unset($data[$k1][$k2]);
@@ -85,11 +92,11 @@ function htmql_query($content,$sql)
 			}
 		}
 	}
-	return $data;
+	return sorting($data);
 }
 
 /*======================================================================*\
-	END OF Function html_query
+	END OF Function htmql_query
 \*======================================================================*/
 
 /*======================================================================*\
@@ -119,11 +126,11 @@ function tag_extract($tag,$content,$select)
 			{
 				if($rel2abs == true && isset($base_url) && in_array($out1[1][$key], $url_attrib)) 
 				{
-					$tags[$tag][$i]['attribute'][$out1[1][$key]] = rel2abs($base_url,$out1[2][$key]);
+					$tags[$tag][$i][$out1[1][$key]] = rel2abs($base_url,$out1[2][$key]);
 				}
 				else
 				{
-					$tags[$tag][$i]['attribute'][$out1[1][$key]] = $out1[2][$key];
+					$tags[$tag][$i][$out1[1][$key]] = $out1[2][$key];
 				}
 			}
 		}
@@ -283,5 +290,35 @@ function rel2abs($base,$rel)
 
 /*======================================================================*\
 	END OF Function rel2abs
+\*======================================================================*/
+
+/*======================================================================*\
+	Function:	sorting
+	Purpose:	sort final variable from 0th key
+	Input:		array
+	Output:		array with 0th key
+\*======================================================================*/
+
+function sorting($array) {
+	
+	if(is_array($array))
+	{
+		foreach($array as $key => $value)
+		{
+			$count = count($array[$key])-1;
+			$i = 0;
+			$a[$key] = null;
+			foreach($value as $v)
+			{
+				$a[$key][$i] = $v;
+				$i++;
+			}
+		}
+	}
+    return $a;
+}
+
+/*======================================================================*\
+	END OF Function sorting
 \*======================================================================*/
 ?>
