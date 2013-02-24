@@ -71,5 +71,8 @@ Convert relative urls in href and src attribute to absolute urls
       $content = file_get_contents($url);
       $result = html_query($content,$sql);      
 
-
+License:
+------------
+htmQL uses BSD 2-Clause License.
+	  
 Original idea is by [Jonas John](http://www.jonasjohn.de/old-projects.htm)
