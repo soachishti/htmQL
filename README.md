@@ -71,9 +71,7 @@ Convert relative urls in href and src attribute to absolute urls
 		  $content = file_get_contents($url);
 		  $result = html_query($content,$sql);      
 
-**Example Usage 5**	  
-	
-Example Output
+**Example Output**	  
 	
 		Array
 		(
