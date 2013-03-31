@@ -28,7 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-ini_set('display_errors', 'on'); # Report all Errors
+ini_set("display_errors", "on"); # Report all Errors
 error_reporting(E_ALL ^ E_NOTICE); # Report all Errors
 //error_reporting(0); # No Error Reporting
 
@@ -41,31 +41,32 @@ error_reporting(E_ALL ^ E_NOTICE); # Report all Errors
 
 function htmql_query($content,$sql)
 {
+	global $removeSpecialChars;
 	preg_match("#^SELECT\s*(.*?)\s*FROM\s*(.*?)\s*(|WHERE\s*(.*?)\s*)$#",$sql,$out); #
 
-	$where = isset($out[4]) ? $out[4] : null ;
-	$select = array_flip(explode(',',strtolower($out[1])));
-	$tags = array_flip(explode(',',$out[2])) ;
-		
-	if(isset($select['html2text']))
+	$where = !empty($out[4]) ? $out[4] : null ;
+	$select = !empty($out[1]) ? array_flip(explode(",",strtolower($out[1]))) : null;
+	$requiredTags = !empty($out[2]) ? array_flip(explode(",",$out[2])) : null;
+
+	if($select == null)
 	{
-		$data['html2txt'] = html2txt($content);
+		die("Attributes doen't exit");
+	}
+	else if($requiredTags  == null)
+	{
+		die("Tag deosn't exist");
+	}
+	
+	if(isset($select["html2text"]))
+	{
+		$removeSpecialChars = !empty($removeSpecialChars) ? true : false; 
+		$data["html2txt"] = html2txt($content,$removeSpecialChars);
 	}
 	else
 	{	
-		if(isset($tags['*']))
-		{	
-			preg_match_all("/<([a-z0-9\-]+)\s+?/is", $content, $out);
-			$tags = array_flip(array_unique($out[1])); 
-		} 
-		
-		$data = Array();
-		foreach($tags as $key => $value)
-		{
-			$extracted_tags = tag_extract($key,$content,$select);
-			$data = array_merge($extracted_tags,$data);
-		}
-	
+		preg_match_all("/<([a-z0-9\-]+)\s+?/is", $content, $out);
+		$tags = array_flip(array_unique($out[1])); 
+
 		if($where != null)
 		{
 			preg_match_all("#(|OR|AND)\s*([a-z0-9\-]+)\s*(LIKE|\!=|=|<|>)+\s*[\"\'](.*?)[\"\']\s*(|OR|AND)*#is",$where,$out);
@@ -75,24 +76,60 @@ function htmql_query($content,$sql)
 			$condition = $out[1];
 			$values = $out[4];
 			$comparison = $out[3];
+		}
 		
+		$data = Array();
+		$toSelect = isset($keys) ? array_merge(array_flip($keys),$select) : $select;
+		foreach($tags as $key => $value)
+		{
+			$extractedTags = tag_extract($key,$content,$toSelect);
+			$data = array_merge($extractedTags,$data);
+		}
+		
+		if($where != null)
+		{
 			foreach($data as $k1 => $v1)
 			{
-				foreach($v1 as $k2 => $v3)
+				foreach($v1 as $k2 => $v2)
 				{
-					for($i=0;$i<=count($v3)-1;$i++)
+					$datas = !empty($data[$k1][$k2]) ? $data[$k1][$k2] : Array() ;	
+					
+					if(found($datas,$keys,$values,$condition,$count,$comparison) != 1)
 					{
-						$datas = $data[$k1][$k2];	
-						if(found($datas,$keys,$values,$condition,$count,$comparison) != 1)
+						unset($data[$k1][$k2]);
+					}
+					else
+					{
+						foreach($datas as $k3 => $v3)
 						{
-							unset($data[$k1][$k2]);
+							if(!isset($select[$k3]) && !isset($requiredTags["*"]))
+							{	
+								unset($data[$k1][$k2][$k3]);
+							}
 						}
+					}
+					if(empty($data[$k1]))
+					{
+						unset($data[$k1]);
 					}
 				}
 			}
 		}
+		
+		if(!isset($requiredTags["*"]))
+		{
+			foreach($data as $key => $value)
+			{
+				if(!isset($requiredTags[$key]))
+				{
+					unset($data[$key]);
+				}
+			}
+		}
+		$data = sorting($data);
 	}
-	return sorting($data);
+	unset($content,$tags);	
+	return (!empty($data)) ? $data : Array();
 }
 
 /*======================================================================*\
@@ -108,25 +145,31 @@ function htmql_query($content,$sql)
 
 function tag_extract($tag,$content,$select)
 {
-	global $rel2abs,$base_url,$url_attrib;
+	global $rel2abs,$baseUrl,$urlAttribute,$htmlEncode;
 	$tags = Array();
 	preg_match_all("/<{$tag}([ \t].*?|)>((.*?)<\/{$tag}>)?/is", $content, $out);
-	
 	for($i=0;$i<=count($out[0])-1;$i++)
 	{
-		if(isset($select['text']) || isset($select['*']))
+		if(isset($select["text"]) || isset($select['*']))
 		{
-			$tags[$tag][$i]['text'] = htmlspecialchars(trim($out[3][$i]));
+			if(!empty($htmlEncode))
+			{
+				$tags[$tag][$i]['text'] = htmlspecialchars(trim($out[3][$i]));
+			}
+			else
+			{
+				$tags[$tag][$i]['text'] = trim($out[3][$i]);
+			}
 		}
-		preg_match_all('/\s*(.*?)\s*=\s*[\"\']?((?:.(?![\"\']?\s+(?:\S+)=|[>\"\']))+.)[\"\']?/is', $out[1][$i], $out1);
+		preg_match_all("/\s*(.*?)\s*=\s*[\"\']?((?:.(?![\"\']?\s+(?:\S+)=|[>\"\']))+.)[\"\']?/is", $out[1][$i], $out1);
 		foreach($out1[1] as $key => $value)
 		{
 			$out1[1][$key] = trim($out1[1][$key]);
-			if(isset($select[$out1[1][$key]]) || isset($select['*']))
+			if(isset($select[$out1[1][$key]]) || isset($select["*"]))
 			{
-				if($rel2abs == true && isset($base_url) && in_array($out1[1][$key], $url_attrib)) 
+				if($rel2abs == true && isset($baseUrl) && in_array($out1[1][$key], $urlAttribute)) 
 				{
-					$tags[$tag][$i][$out1[1][$key]] = rel2abs($base_url,$out1[2][$key]);
+					$tags[$tag][$i][$out1[1][$key]] = rel2abs($baseUrl,$out1[2][$key]);
 				}
 				else
 				{
@@ -134,7 +177,8 @@ function tag_extract($tag,$content,$select)
 				}
 			}
 		}
-	}		
+	}
+	unset($content);	
 	return $tags;
 }
 
@@ -164,15 +208,16 @@ function found($data,$key,$values,$condition,$count,$operator)
 	}
 	for($i = 1;$i <= $count;$i++)
 	{
-		if($condition[$i] == 'AND')
+		if($condition[$i] == "AND")
 		{
 			$result = (isset($result)) ? $result * $res[$i] : $res[$i] * $res[$i-1];			
 		}
-		if($condition[$i] == 'OR')
+		if($condition[$i] == "OR")
 		{
 			$result = (isset($result)) ? $result + $res[$i] : $res[$i] + $res[$i-1];
 		}
 	}
+	unset($data);
 	if(!isset($result)){
 		return $res[0];
 	}
@@ -199,19 +244,19 @@ function compare($k1,$k2,$operator)
 {
 	switch($operator)
 	{
-		case 'LIKE':
+		case "LIKE":
 			return (preg_match("#".addslashes($k2)."#is",$k1)) ? true : false;
 		break;
-		case '=':
+		case "=":
 			return ($k1 == $k2) ? true : false ;
 		break;
-		case '!=':
+		case "!=":
 			return ($k1 !== $k2) ? true : false ;
 		break;
-		case '<':
+		case "<":
 			return ($k1 < $k2) ? true : false ;
 		break;
-		case '>':
+		case ">":
 			return ($k1 > $k2) ? true : false ;
 		break;
 	}
@@ -238,8 +283,7 @@ function html2txt($html,$special = false)
 	"#&nbsp;#",
 	"#<.*?>#"
 	);
-	$txt = preg_replace($search, " ", $str); # replacing html tags, comments, spaces, script and link tags
-	
+	$txt = preg_replace($search, " ", $html); # replacing html tags, comments, spaces, script and link tags
 	/* Removing Special Characters  */
 	if($special == true)
 	{
@@ -263,29 +307,29 @@ function html2txt($html,$special = false)
 
 function rel2abs($base,$rel)
 {
-	if (parse_url($rel, PHP_URL_SCHEME) != '') # return if already absolute URL 
+	if (parse_url($rel, PHP_URL_SCHEME) != "") # return if already absolute URL 
 	{
 		return $rel;
 	}
 	
-	if ($rel=='#' || $rel=='?') # queries and anchors 
+	if ($rel == "#" || $rel == "?") # queries and anchors 
 	{
 		return $base.$rel;
 	}
 	
 	extract(parse_url($base)); # parse base URL and convert to local variables: $scheme, $host, $path
-	$path = (isset($path)) ? $path : '/';
-	$path = preg_replace('#/[^/]*$#', '', $path); # remove non-directory element from path
+	$path = (isset($path)) ? $path : "/";
+	$path = preg_replace("#/[^/]*$#", "", $path); # remove non-directory element from path
 	
-	if ($rel == '/') 
+	if ($rel == "/") 
 	{
-		$path = '';
+		$path = "";
 	}
 	$abs = $host . $path . "/" . $rel;
 	$re = array('#(/\.?/)#', '#/(?!\.\.)[^/]+/\.\./#'); # replace '//' or '/./' or '/foo/../' with '/'
-	for($n = 1; $n > 0; $abs=preg_replace($re, '/', $abs, -1, $n)) {}
+	for($n = 1; $n > 0; $abs=preg_replace($re, "/", $abs, -1, $n)) {}
 
-	return $scheme.'://'.$abs; #absolute URL is ready!
+	return $scheme."://".$abs; #absolute URL is ready!
 }
 
 /*======================================================================*\
@@ -315,6 +359,7 @@ function sorting($array) {
 			}
 		}
 	}
+	unset($array);
     return $a;
 }
 
