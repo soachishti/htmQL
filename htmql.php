@@ -60,13 +60,13 @@ function htmql_query($content,$sql)
 	if(isset($select["html2text"]))
 	{
 		$removeSpecialChars = !empty($removeSpecialChars) ? true : false; 
-		$data["html2txt"] = html2txt($content,$removeSpecialChars);
+		$data["html2text"] = html2txt($content,$removeSpecialChars);
 	}
 	else
 	{	
-		preg_match_all("/<([a-z0-9\-]+)\s+?/is", $content, $out);
+		preg_match_all("#<\s*([a-z0-9\-]+)\s*#is", $content, $out);
 		$tags = array_flip(array_unique($out[1])); 
-
+		
 		if($where != null)
 		{
 			preg_match_all("#(|OR|AND)\s*([a-z0-9\-]+)\s*(LIKE|\!=|=|<|>)+\s*[\"\'](.*?)[\"\']\s*(|OR|AND)*#is",$where,$out);
@@ -145,13 +145,18 @@ function htmql_query($content,$sql)
 
 function tag_extract($tag,$content,$select)
 {
-	global $rel2abs,$baseUrl,$urlAttribute,$htmlEncode;
+	global $rel2abs,$baseUrl,$urlAttribute,$htmlEncode,$removeHtml;
 	$tags = Array();
-	preg_match_all("/<{$tag}([ \t].*?|)>((.*?)<\/{$tag}>)?/is", $content, $out);
+	preg_match_all("/<\s*{$tag}\b\s*([ \t].*?|)\s*>((.*?)<\s*\/\s*{$tag}\s*>)?/is", $content, $out);
+
 	for($i=0;$i<=count($out[0])-1;$i++)
 	{
-		if(isset($select["text"]) || isset($select['*']))
+		if(isset($select["text"]) || isset($select['*']) && !empty($out[3][$i]))
 		{
+			if(!empty($removeHtml))
+			{
+				$out[3][$i] = strip_tags($out[3][$i]);
+			}
 			if(!empty($htmlEncode))
 			{
 				$tags[$tag][$i]['text'] = htmlspecialchars(trim($out[3][$i]));
@@ -160,6 +165,10 @@ function tag_extract($tag,$content,$select)
 			{
 				$tags[$tag][$i]['text'] = trim($out[3][$i]);
 			}
+		}
+		else
+		{
+			$tags[$tag][$i] = null;
 		}
 		preg_match_all("/\s*(.*?)\s*=\s*[\"\']?((?:.(?![\"\']?\s+(?:\S+)=|[>\"\']))+.)[\"\']?/is", $out[1][$i], $out1);
 		foreach($out1[1] as $key => $value)

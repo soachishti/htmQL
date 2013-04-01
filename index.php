@@ -21,11 +21,12 @@ $content = file_get_contents($url); # Fetching HTML from Url
 	//$sql = "SELECT href FROM a WHERE id = 'something' AND class = 'something' OR style = 'beautiful'";  # Query 5
 		
 //Convert relative urls in href and src attribute to absolute urls
-$rel2abs = true; # Convert Relative Urls to Absolute Url 
-$baseUrl = $url; # Base Url for converting Relative url to Absolute url
-$urlAttribute = Array('href','src'); # Key of Attribute which contains URL 
+//$rel2abs = true; # Convert Relative Urls to Absolute Url 
+//$baseUrl = $url; # Base Url for converting Relative url to Absolute url
+//$urlAttribute = Array('href','src'); # Key of Attribute which contains URL 
 $htmlEncode = true; # Key of Attribute which contains URL 
-$removeSpecialChars = true; # Remove special characters from html if query is "SELECT html2text FROM *"
+//$removeSpecialChars = true; # Remove special characters from html if query is "SELECT html2text FROM *"
+$removeHtml = true; # Remove html from tag text.
 
 $start = microtime();
 
