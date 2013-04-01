@@ -26,7 +26,7 @@ $content = file_get_contents($url); # Fetching HTML from Url
 //$urlAttribute = Array('href','src'); # Key of Attribute which contains URL 
 $htmlEncode = true; # Key of Attribute which contains URL 
 //$removeSpecialChars = true; # Remove special characters from html if query is "SELECT html2text FROM *"
-$removeHtml = true; # Remove html from tag text.
+//$removeHtml = true; # Remove html from tag text.
 
 $start = microtime();
 
