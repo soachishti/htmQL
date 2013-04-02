@@ -7,15 +7,21 @@ you to parse HTML by using SQL syntax.
 Requirements:
 ------------
 * PHP > 5
+* SimpleXML and DOM (libXML)(needed for simpleXML version)
+* HTML Tidy
 
 Features:
 ------------
 * Better recognition of Tags.
+* Support Invalid HTML (simpleXML version support this)
+* Faster than other HTML parser classes  (simpleXML version support this)
 * Extract html tags using SQL syntax.
 * Support SELECT and WHERE clause.
 * Convert HTML to Text.
 * Convert Relatvie Urls to Absolute Urls.
 * No use of eval function as compare to [htmlSQL](https://github.com/hxseven/htmlSQL).
+
+SimpleX
 
 **htmQL query look like**
 

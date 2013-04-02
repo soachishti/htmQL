@@ -1,5 +1,6 @@
 <?php
-require('htmql.php'); # Including functions file
+require('htmql_simpleXML.php'); # Including functions file
+//require('htmql_regex.php'); # Including functions file
 
 $url = "http://www.google.com/";
 $content = file_get_contents($url); # Fetching HTML from Url
@@ -21,9 +22,9 @@ $content = file_get_contents($url); # Fetching HTML from Url
 	//$sql = "SELECT href FROM a WHERE id = 'something' AND class = 'something' OR style = 'beautiful'";  # Query 5
 		
 //Convert relative urls in href and src attribute to absolute urls
-//$rel2abs = true; # Convert Relative Urls to Absolute Url 
-//$baseUrl = $url; # Base Url for converting Relative url to Absolute url
-//$urlAttribute = Array('href','src'); # Key of Attribute which contains URL 
+$rel2abs = true; # Convert Relative Urls to Absolute Url 
+$baseUrl = $url; # Base Url for converting Relative url to Absolute url
+$urlAttribute = Array('href','src','content'); # Key of Attribute which contains URL 
 $htmlEncode = true; # Key of Attribute which contains URL 
 //$removeSpecialChars = true; # Remove special characters from html if query is "SELECT html2text FROM *"
 //$removeHtml = true; # Remove html from tag text.
@@ -34,9 +35,9 @@ $result = htmql_query($content,$sql); //Executing Query
 
 $end = microtime();
 $time = $end-$start;
-
+echo "<br />Query perform in $time seconds<br />";
 echo '<pre>';
 	print_r($result); # Output Result		
 echo '</pre>';
-echo "<br />Query perform in $time seconds";
+
 ?>
