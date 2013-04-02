@@ -21,8 +21,6 @@ Features:
 * Convert Relatvie Urls to Absolute Urls.
 * No use of eval function as compare to [htmlSQL](https://github.com/hxseven/htmlSQL).
 
-SimpleX
-
 **htmQL query look like**
 
 		SELECT text,href,title FROM a WHERE class = "link" AND id LIKE '^/$'
