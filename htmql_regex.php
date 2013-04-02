@@ -64,8 +64,8 @@ function htmql_query($content,$sql)
 	}
 	else
 	{	
-		$tidy = tidy_parse_string($content);
-		tidy_clean_repair($tidy);
+		$tidy = new tidy();
+		$tidy = $tidy->repairString($content);
 		preg_match_all("#<\s*([a-z0-9\-]+)\s*#is", $tidy, $out);
 		$tags = array_flip(array_unique($out[1])); 
 		
