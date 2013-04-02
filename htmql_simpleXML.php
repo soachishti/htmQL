@@ -2,7 +2,7 @@
 /*
  * htmSQL (HTML parser using SQL)
  * Created January 2, 2013
- * Version 1.0
+ * Version 1.1
  * 
  * Copyright (c) 2013, soacWAY (soacway@gmail.com).
  * All rights reserved.
