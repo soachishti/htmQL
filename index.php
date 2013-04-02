@@ -25,9 +25,9 @@ $content = file_get_contents($url); # Fetching HTML from Url
 $rel2abs = true; # Convert Relative Urls to Absolute Url 
 $baseUrl = $url; # Base Url for converting Relative url to Absolute url
 $urlAttribute = Array('href','src','content'); # Key of Attribute which contains URL 
-$htmlEncode = true; # Key of Attribute which contains URL 
+//$htmlEncode = true; # Key of Attribute which contains URL (For regex Version)
 //$removeSpecialChars = true; # Remove special characters from html if query is "SELECT html2text FROM *"
-//$removeHtml = true; # Remove html from tag text.
+//$removeHtml = true; # Remove html from tag text. (For regex Version)
 
 $start = microtime();
 
