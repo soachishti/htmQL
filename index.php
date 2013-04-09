@@ -1,10 +1,19 @@
 <?php
-require('htmql_simpleXML.php'); # Including functions file
-//require('htmql_regex.php'); # Including functions file
+require('htmql.php'); # Including functions file
 
-$url = "http://www.google.com/";
-$content = file_get_contents($url); # Fetching HTML from Url
+$htmql = new htmql();
+//Settings
+//$htmql->rel2abs = false; # Convert Relative Urls to Absolute Url 
+//$htmql->baseUrl;  # Base Url for converting Relative url to Absolute url
+//$htmql->urlAttribute = Array('href','src'); # Key of Attribute which contains URL 
+//$htmql->htmlEncode = true; # Key of Attribute which contains URL (For regex Version)
+//$htmql->removeHtml = true; # Remove html from tag text. (For regex Version)
+//$htmql->removeSpecialChars = true; # Remove special characters from html if query is "SELECT html2text FROM *"
+$htmql->parseMethod = "SIMPLEXML"; # Convert Relative Urls to Absolute Url 
+$htmql->NoMultiDimenArray = 0; # Return result in Multi dimensional Array or Single Array.
 
+$connect = $htmql->connect("string",file_get_contents('foo.html'));
+//	$connect = $htmql->connect("host","http://www.google.com/");
 
 //Extract all attribute and text from tag a
 	$sql = "SELECT * FROM *";  # Query 1
@@ -20,24 +29,26 @@ $content = file_get_contents($url); # Fetching HTML from Url
 	
 //Extract href attributes value where id, class and style are given as supplied.
 	//$sql = "SELECT href FROM a WHERE id = 'something' AND class = 'something' OR style = 'beautiful'";  # Query 5
-		
-//Convert relative urls in href and src attribute to absolute urls
-$rel2abs = true; # Convert Relative Urls to Absolute Url 
-$baseUrl = $url; # Base Url for converting Relative url to Absolute url
-$urlAttribute = Array('href','src','content'); # Key of Attribute which contains URL 
-//$htmlEncode = true; # Key of Attribute which contains URL (For regex Version)
-//$removeSpecialChars = true; # Remove special characters from html if query is "SELECT html2text FROM *"
-//$removeHtml = true; # Remove html from tag text. (For regex Version)
 
-$start = microtime();
+$result = $htmql->query($sql); //Executing Query
+if($connect == false || $result == false)
+{
+	die($htmql->error);
+}
 
-$result = htmql_query($content,$sql); //Executing Query
+echo "<pre>";
 
-$end = microtime();
-$time = $end-$start;
-echo "<br />Query perform in $time seconds<br />";
-echo '<pre>';
-	print_r($result); # Output Result		
+	echo $htmql->num_rows() . "<br />"; // No of Results
+	foreach($htmql->fetch_array() as $row)
+	{
+		print_r($row);
+	}
+//
+//	foreach($htmql->fetch_object() as $row)
+//	{
+//		print_r($row);
+//	} 
+
 echo '</pre>';
-
+$htmql->close(); // Deleting variables
 ?>
