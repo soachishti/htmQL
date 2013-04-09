@@ -38,7 +38,7 @@ if($connect == false || $result == false)
 
 echo "<pre>";
 
-	echo $htmql->num_rows() . "<br />"; // No of Results
+	echo "<b>No of results:</b>" . $htmql->num_rows() . "<br />"; // No of Results
 	foreach($htmql->fetch_array() as $row)
 	{
 		print_r($row);
