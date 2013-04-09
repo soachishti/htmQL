@@ -107,7 +107,7 @@ class htmql
 			$this->error = "Invalid Query";
 			return false;
 		}
-		preg_match("#^SELECT\s*(.*?)\s*FROM\s*(.*?)\s*(|WHERE\s*(.*?)\s*)$#",$sql,$out); #
+		preg_match("#^SELECT\s*(.*?)\s*FROM\s*(.*?)\s*(|WHERE\s*(.*?)\s*)$#is",$sql,$out); #
 
 		$where = !empty($out[4]) ? $out[4] : null ;
 		$select = !empty($out[1]) ? array_flip(explode(",",strtolower($out[1]))) : null;
