@@ -12,7 +12,7 @@ $htmql = new htmql();
 $htmql->parseMethod = "SIMPLEXML"; # Convert Relative Urls to Absolute Url 
 $htmql->NoMultiDimenArray = 0; # Return result in Multi dimensional Array or Single Array.
 
-	$connect = $htmql->connect("string",file_get_contents('foo.html'));
+$connect = $htmql->connect("string",file_get_contents('foo.html'));
 //	$connect = $htmql->connect("host","http://www.google.com/");
 
 //Extract all attribute and text from tag a
