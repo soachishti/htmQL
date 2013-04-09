@@ -76,7 +76,7 @@ class htmql
 		}
 		else if($type == "host")
 		{
-			$html = file_get_contents($url);
+			$html = file_get_contents($string);
 			$this->html = $html;
 			$this->baseUrl = $url;
 		}
